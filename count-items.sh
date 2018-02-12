@@ -9,7 +9,7 @@
 #
 
 ## Common
-SOURCE=`pwd`
+LOCATION=`pwd`
 SCRIPTFILE=`basename $0`
 SCRIPTDIR=`dirname $0`
 NOW=$(date +"%Y-%m-%d|%H:%M:%S.%s")
@@ -20,9 +20,8 @@ GREEN="\033[0;32m"
 NC="\033[0m"
 
 ## Default values
-SOURCE=`pwd`
 NAME="someFile"
-MAXDEPTH=1
+MAXDEPTH=2
 TYPE="f"
 
 # Usage Help text
@@ -33,7 +32,7 @@ USAGE:
     ${SCRIPTFILE} [OPTION]...
 
 OPTIONS:
-    -s, --source        Source directory (default is working dirrectory: ${SOURCE})
+    -l, --location      Directory location the search should be performed (default is working dirrectory: ${LOCATION})
     -n, --name          Name of file/directory (default is: ${NAME})
     -t, --type          Type of item, f for File, d for Directory (default: ${TYPE})
     -d, --depth         Maximum depth (default: ${MAXDEPTH})
@@ -41,37 +40,38 @@ OPTIONS:
 
 EXAMPLE:
     ${SCRIPTFILE} -w /path/to/dir -n some-name -t f -d 2
+
 EOM
 
 # Processing arguments
 while [ $# -gt 0 ]
 do
     case "$1" in
-        -s|--sourcedir)
-                [ -z "$2" ] && printf "\n${USAGE}\n"; exit $E_OPTERROR;
-                SOURCE="$2"; shift;;
+        -l|--location)
+                if [ -z "$2" ]; then printf "\n${USAGE}\n\n"; exit $E_OPTERROR; fi
+                LOCATION="$2"; shift;;
         -n|--name)
+                if [ -z "$2" ]; then printf "\n${USAGE}\n\n"; exit $E_OPTERROR; fi
                 NAME="$2"; shift;;
         -d|--depth)
-                [ -z "$2" ] && printf "\n${USAGE}\n"; exit $E_OPTERROR;
+                if [ -z "$2" ]; then printf "\n${USAGE}\n\n"; exit $E_OPTERROR; fi
                 if ! [[ "$2" =~ ^[0-9]+$ ]]; then printf "\n${USAGE}"; exit $E_OPTERROR; fi ## If maxdepth is not numeric, exit
                 MAXDEPTH="$2"; shift;;
         -t|--type)
-                [ -z "$2" ] && printf "\n${USAGE}\n"; exit $E_OPTERROR;
+                if [ -z "$2" ]; then printf "\n${USAGE}\n\n"; exit $E_OPTERROR; fi
                 TYPE="$2"; shift;;
         -?|-h|--help)
-                [ -z "$2" ] && printf "\n${USAGE}\n"; exit $E_OPTERROR;
                 printf "\n${USAGE}\n\n"; exit;;
         *)
                 printf -e "\nERROR: Unknown parameter: $1\n";
-                printf "\n${USAGE}\n"; exit $E_OPTERROR;;
+                printf "\n${USAGE}\n\n"; exit $E_OPTERROR;;
     esac
     shift
 done
 
-## Loop through the source folder and count the items
+## Loop through the specified folder with the location switch and count the items
 COUNTER=0
-for item in `find $SOURCE -maxdepth $MAXDEPTH -name $NAME -type $TYPE`; do
+for item in `find $LOCATION -maxdepth $MAXDEPTH -name $NAME -type $TYPE`; do
         let COUNTER++
 done
 
@@ -87,4 +87,4 @@ else
 fi
 
 ## Print the results
-printf "Found $COUNTER $SELECTEDTYPE with the name containing \"${NAME}\" in $SOURCE\n"
+printf "Found $COUNTER $SELECTEDTYPE with the name containing \"${NAME}\" in $LOCATION\n"
