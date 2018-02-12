@@ -21,4 +21,4 @@ OPTIONS:
 
 EXAMPLE:
     count-items.sh -w /path/to/dir -n some-name -t f -d 2
-    ```
+```
