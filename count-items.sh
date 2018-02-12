@@ -21,7 +21,7 @@ NC="\033[0m"
 
 ## Default values
 NAME="someFile"
-MAXDEPTH=2
+MAXDEPTH=1
 TYPE="f"
 
 # Usage Help text
