@@ -1,6 +1,6 @@
 #!/bin/bash
 ##################################################
-# Name: count.sh
+# Name: count-items.sh
 # Description: Basic script to count files or directories withing a specified location
 # Script Maintainer: Attila Antal
 #
@@ -71,7 +71,7 @@ done
 
 ## Loop through the source folder and count the items
 COUNTER=0
-for item in `find $WORKDIR -maxdepth $MAXDEPTH -name $NAME -type $TYPE`; do
+for item in `find $SOURCE -maxdepth $MAXDEPTH -name $NAME -type $TYPE`; do
         let COUNTER++
 done
 
